@@ -1,0 +1,4 @@
+para correrlo: 
+
+npm install
+npm run dev

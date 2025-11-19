@@ -1,0 +1,55 @@
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Employee {
+  id        String       @id @default(cuid())
+  name      String
+  lastName  String
+  cedula    String       @unique
+  email     String?
+  phone     String?
+  isAdmin   Boolean      @default(false)
+  sedeId    String?
+  sede      Sede?        @relation(fields: [sedeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  records   TimeRecord[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model Sede {
+  id          String       @id @default(cuid())
+  name        String
+  address     String?
+  coordinates String? // "lat, lon"
+  isActive    Boolean      @default(true)
+  employees   Employee[]
+  records     TimeRecord[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model TimeRecord {
+  id          String   @id @default(cuid())
+  employeeId  String
+  sedeId      String?
+  recordType  String // "entrada" | "salida"
+  coordinates String?
+  latitude    Float?
+  longitude   Float?
+  inSite      Boolean?
+  photoUrl    String?
+  timestamp   DateTime @default(now())
+  overtimeMin Int? // calculado en salida
+
+  employee Employee @relation(fields: [employeeId], references: [id])
+  sede     Sede?    @relation(fields: [sedeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
