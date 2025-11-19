@@ -215,8 +215,6 @@ export class PrismaUnitOfWork implements IUnitOfWork {
   }
 
   async commit(): Promise<void> {
-    // Prisma maneja transacciones por operación en este ejemplo.
-    // Aquí podrías implementar una transacción compuesta si fuera necesario.
     return;
   }
 }
